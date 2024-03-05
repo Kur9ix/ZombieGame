@@ -13,5 +13,6 @@ public class PerformaceUI : MonoBehaviour
         deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
 		float fps = 1.0f / deltaTime;
 		text.text = "FPS:" + Mathf.Ceil (fps).ToString ();
+        
     }
 }
