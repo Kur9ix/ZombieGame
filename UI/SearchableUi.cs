@@ -8,7 +8,11 @@ public class SearchableUi : MonoBehaviour
     private List<GameObject> searchableItems = new List<GameObject>();
     public void UpdateSearchabelUI(GameObject searchableObj){
         if(searchableItems.Count != searchableObj.GetComponent<SearchableStorage>().storage.Count){
+            if(searchableItems.Count > searchableObj.GetComponent<SearchableStorage>().storage.Count){
 
+            }else {
+                
+            }
         }
     }
 }
