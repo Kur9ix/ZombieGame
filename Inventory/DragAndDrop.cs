@@ -23,12 +23,14 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     {
         Debug.Log("DragBegin");
         canvasGroup.alpha = 0.5f;
+        gameObject.transform.SetParent(GameObject.Find("InventoryUi").transform);
         DeactivateRaycastTargets();
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         Debug.Log("Draging");
+        
         rectTransform.anchoredPosition += eventData.delta;
     }
     public void OnEndDrag(PointerEventData eventData)
@@ -40,21 +42,26 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
 
+        print("hit34erweawedawet");
+
         bool hitSlot = false;
         foreach (RaycastResult result in results)
         {
-            if (result.gameObject.CompareTag("slot") && result.gameObject.GetComponent<Slot>().slotUsed == false)
+            if (result.gameObject.tag == "slot") // result.gameObject.GetComponent<Slot>().slotUsed == false
             {
-                hitSlot = true;
-                break;
+                if(result.gameObject.GetComponent<Slot>().slotUsed == false){
+                    gameObject.transform.SetParent(GameObject.Find("InventorySlotSpace").transform);
+                    hitSlot = true;
+                    break;
+                }
+            
             }
-            else if (result.gameObject.CompareTag("storageSlot") && result.gameObject.GetComponent<Slot>().slotUsed == false)
+            else if (result.gameObject.CompareTag("storageSlot"))
             { 
                 hitSlot = true;
                 break;
             }
         
-
 
             if (result.gameObject.CompareTag("dropArea"))
             {
@@ -65,6 +72,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
             if (result.gameObject.CompareTag("handEquipSlot"))
             {
                 GameObject.Find("InventoryManager").GetComponent<Inventory>().equipItem(item, item.itemID);
+                gameObject.transform.SetParent(GameObject.Find("EquipSpace").transform);
                 lastSlot = GameObject.Find("HandEquipSlot");
                 equipedItem = true;
                 break;
@@ -74,6 +82,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         if (!hitSlot && lastSlot != null)
         {
             rectTransform.anchoredPosition = lastSlot.GetComponent<RectTransform>().anchoredPosition;
+            
         }
 
 

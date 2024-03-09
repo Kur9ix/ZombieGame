@@ -15,6 +15,8 @@ public class Pathfinding : MonoBehaviour
 
     public List<NodeBase> searched = new List<NodeBase>();
 
+    private List<Vector3Int> path = new List<Vector3Int>();
+
     public int newCost;
     public NodeBase node;
     public NodeBase startPoint;
@@ -22,7 +24,7 @@ public class Pathfinding : MonoBehaviour
 
     public List<Vector3Int> pathfindingPoints(Vector3 startPos, Vector3 targetPos)
     {
-        List<Vector3Int> path = new List<Vector3Int>();
+        path.Clear();
         startPoint = new NodeBase(grid.WorldToCell(new Vector3((startPos.x + startPos.y) / 2f, (startPos.x - startPos.y) / 4f, 0)));
         targetPoint = new NodeBase(grid.WorldToCell(new Vector3((targetPos.x + targetPos.y) / 2f, (targetPos.x - targetPos.y) / 4f, 0)));
 
@@ -85,32 +87,19 @@ public class Pathfinding : MonoBehaviour
 
     }
 
-    bool checkIfExits(Vector3Int vector, List<NodeBase> list)
-    {
-        foreach (NodeBase node in list)
-        {
-            if (node.position == vector)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public List<Vector3Int> getFinalPath()
     {
-        List<Vector3Int> finalPath = new List<Vector3Int>();
-
+        List<Vector3Int> path = new List<Vector3Int>();
         NodeBase currentNode = targetPoint;
 
-        while (currentNode != null)
+        while (currentNode != startPoint)
         {
-            finalPath.Add(currentNode.position);
-
+            path.Add(currentNode.position);
             currentNode = currentNode.parent;
         }
-        finalPath.Reverse();
-        return finalPath;
+        path.Reverse();
+        print(path.Count());
+        return path;
     }
 
 
@@ -132,6 +121,19 @@ public class Pathfinding : MonoBehaviour
 
         return neighbours;
     }
+
+    bool checkIfExits(Vector3Int vector, List<NodeBase> list)
+    {
+        foreach (NodeBase node in list)
+        {
+            if (node.position == vector)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     bool obstacleCheck(Vector3Int pos)
     {

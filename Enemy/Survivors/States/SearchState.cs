@@ -49,20 +49,27 @@ public class SearchState : State
         canSeeThePlayer = checkIfPlayerIsInView.IfPlayerIsInView();
     }
 
-    void CalculatePath()
+    IEnumerator MoveAlongPath(List<Vector3Int> path, Vector3Int targetpos)
     {
-        List<Vector3Int> path = pathfinding.pathfindingPoints(transform.position, checkIfPlayerIsInView.lastPlayerPos);
-
         foreach (Vector3Int vector in path)
         {
-            Vector3 direction = (vector - transform.position).normalized;
-            transform.Translate(direction * moveSpeed * Time.deltaTime);
-            print("moving");
             
+            transform.position = Vector3.MoveTowards(transform.position, vector, moveSpeed * Time.deltaTime);
+            yield return null;
+
+            if(transform.position == targetpos){
+                break;
+            }
+    
+            print("Moved to: " + vector);
         }
         pathCalculated = false;
     }
 
-
+    void CalculatePath()
+    {
+        List<Vector3Int> path = pathfinding.pathfindingPoints(transform.position, checkIfPlayerIsInView.lastPlayerPos);
+        StartCoroutine(MoveAlongPath(path, pathfinding.targetPoint.position));
+    }
 
 }

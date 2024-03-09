@@ -1250,7 +1250,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &596942532
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2781,6 +2781,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf6f947aafde6204a8a4d496a77fc6d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemPrefab: {fileID: 0}
+  slots: []
 --- !u!114 &992382713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5067,9 +5069,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventorySlotSpace: {fileID: 1001532665}
   equipSpace: {fileID: 973906553}
-  storageUI: {fileID: 0}
+  storageUI: {fileID: 270882774}
   escMenu: {fileID: 664773813}
-  searchabelUi: {fileID: 0}
+  searchabelUi: {fileID: 596942531}
   UiActive: 0
 --- !u!1 &1979881672
 GameObject:
