@@ -12,7 +12,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     public inventoryItem item;
     public GameObject lastSlot;
 
-    public bool equipedItem;
+    public bool equipedItem = false;
 
     private void Awake()
     {
@@ -30,7 +30,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     public void OnDrag(PointerEventData eventData)
     {
         Debug.Log("Draging");
-        
+
         rectTransform.anchoredPosition += eventData.delta;
     }
     public void OnEndDrag(PointerEventData eventData)
@@ -44,48 +44,25 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
 
         print("hit34erweawedawet");
 
-        bool hitSlot = false;
         foreach (RaycastResult result in results)
         {
-            if (result.gameObject.tag == "slot") // result.gameObject.GetComponent<Slot>().slotUsed == false
-            {
-                if(result.gameObject.GetComponent<Slot>().slotUsed == false){
-                    gameObject.transform.SetParent(GameObject.Find("InventorySlotSpace").transform);
-                    hitSlot = true;
-                    break;
-                }
-            
-            }
-            else if (result.gameObject.CompareTag("storageSlot"))
-            { 
-                hitSlot = true;
-                break;
-            }
-        
-
             if (result.gameObject.CompareTag("dropArea"))
             {
                 GameObject.Find("InventoryUi").GetComponent<InventoryUI>().removeItemFormUI(item.itemID);
                 GameObject.Find("InventoryManager").GetComponent<Inventory>().dropItem(item, 1);
                 Destroy(gameObject);
             }
-            if (result.gameObject.CompareTag("handEquipSlot"))
+            if (result.gameObject.CompareTag("handEquipSlot") && !equipedItem)
             {
                 GameObject.Find("InventoryManager").GetComponent<Inventory>().equipItem(item, item.itemID);
-                gameObject.transform.SetParent(GameObject.Find("EquipSpace").transform);
                 lastSlot = GameObject.Find("HandEquipSlot");
                 equipedItem = true;
                 break;
             }
 
         }
-        if (!hitSlot && lastSlot != null)
-        {
-            rectTransform.anchoredPosition = lastSlot.GetComponent<RectTransform>().anchoredPosition;
-            
-        }
-
-
+        gameObject.transform.SetParent(lastSlot.transform.parent);
+        rectTransform.anchoredPosition = lastSlot.GetComponent<RectTransform>().anchoredPosition;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -108,6 +85,10 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         {
             obj.GetComponent<CanvasGroup>().blocksRaycasts = true;
         }
+    }
+
+    public void switchItem(){
+
     }
 
 

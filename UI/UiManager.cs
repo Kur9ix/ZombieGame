@@ -57,7 +57,7 @@ public class UiManager : MonoBehaviour
         {
             StartCoroutine(ToggleUiWithDelay(0.3f, true, escMenu));
         }
-        else if ((Input.GetKey(KeyCode.Escape)) && escMenu.activeInHierarchy)
+        else if (Input.GetKey(KeyCode.Escape) && escMenu.activeInHierarchy)
         {
             StartCoroutine(ToggleUiWithDelay(0.3f, false, escMenu));
         }
