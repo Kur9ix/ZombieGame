@@ -23,6 +23,7 @@ public class Slot : MonoBehaviour, IDropHandler
                 }
                 if (eventData.pointerDrag.GetComponent<DragAndDrop>().lastSlot.tag == "storageSlot" && tag == "slot")
                 {
+                    print("TESTETST");
                     GameObject.Find("StorageUi").GetComponent<StorageUi>().switchItemToInventory(eventData.pointerDrag.GetComponent<DragAndDrop>().item);
                     eventData.pointerDrag.transform.SetParent(GameObject.Find("InventorySlotSpace").transform);
                 }

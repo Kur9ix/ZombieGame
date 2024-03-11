@@ -32,4 +32,9 @@ public class Item : MonoBehaviour
     public AudioClip audioClip;
     public ParticleSystem bullet; 
     public ParticleSystem Muzzelflasch;
+
+    public void Start(){
+        gameObject.GetComponent<SpriteRenderer>().sprite = itemObject; 
+    }
 }
+

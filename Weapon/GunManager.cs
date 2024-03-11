@@ -75,8 +75,11 @@ public class GunManager : MonoBehaviour
         Vector2 direction = mousePosition - (Vector3)muzzlePos;
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, inventory.equippedSlot.distance);
-        audio.PlayOneShot(audio.clip);
-    
+        if(audio != null && Muzzelflasch != null && bullet != null){
+            audio.PlayOneShot(audio.clip);
+            Muzzelflasch.Play();
+            bullet.Play();
+        }
         if (hit && hit.transform.tag == "enemy")
         {
             Debug.Log("Hit object: " + hit.collider.gameObject.name);

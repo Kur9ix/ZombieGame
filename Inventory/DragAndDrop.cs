@@ -23,7 +23,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     {
         Debug.Log("DragBegin");
         canvasGroup.alpha = 0.5f;
-        gameObject.transform.SetParent(GameObject.Find("InventoryUi").transform);
+        gameObject.transform.SetParent(GameObject.Find("Canvas").transform);
         DeactivateRaycastTargets();
     }
 
@@ -42,10 +42,14 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
 
-        print("hit34erweawedawet");
-
         foreach (RaycastResult result in results)
         {
+            if((result.gameObject.CompareTag("slot") || result.gameObject.CompareTag("storageSlot")) && !result.gameObject.GetComponent<Slot>().slotUsed)
+{
+            
+                break;
+            }
+
             if (result.gameObject.CompareTag("dropArea"))
             {
                 GameObject.Find("InventoryUi").GetComponent<InventoryUI>().removeItemFormUI(item.itemID);
@@ -61,6 +65,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
             }
 
         }
+    
         gameObject.transform.SetParent(lastSlot.transform.parent);
         rectTransform.anchoredPosition = lastSlot.GetComponent<RectTransform>().anchoredPosition;
     }

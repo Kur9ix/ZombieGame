@@ -268,5 +268,3 @@ public class inventoryItem
         this.Muzzelflasch = Muzzelflasch;
     }
 }
-
-// einfach Item übergeben ????

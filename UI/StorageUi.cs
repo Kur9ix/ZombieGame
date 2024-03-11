@@ -18,6 +18,7 @@ public class StorageUi : MonoBehaviour
 
     public void UpdateStorageUi(GameObject storageObj)
     {
+        print("Updated Storage UI");
         storageObject = storageObj;
         if (ItemObjects.Count != storageObj.GetComponent<StorageManager>().getStorageList().Count)
         {
@@ -29,6 +30,7 @@ public class StorageUi : MonoBehaviour
 
     void getListDifference(List<inventoryItem> items)
     {
+        print("List Difference found");
         if (ItemObjects.Count < items.Count)
         {
             addItemsToStorage(items.Count - ItemObjects.Count);
@@ -41,6 +43,7 @@ public class StorageUi : MonoBehaviour
 
     void addItemsToStorage(int amount)
     {
+        print("adding UI elements to Storage");
         GameObject item = Instantiate(itemPrefab);
         for (int i = 0; i < slots.Count; i++)
         {
@@ -55,6 +58,7 @@ public class StorageUi : MonoBehaviour
 
     void removeItemsFromStorage(int amount)
     {
+        print("removeimng UI elements to Storage");
         for (int i = ItemObjects.Count - amount; i < ItemObjects.Count; i++)
         {
             ItemObjects.RemoveAt(i);
@@ -63,6 +67,7 @@ public class StorageUi : MonoBehaviour
 
     void UpdateItemInfo(List<inventoryItem> items)
     {
+        print("updating UI elements to Storage");
         for (int i = 0; i < items.Count; i++)
         {
             ItemObjects[i].GetComponent<DragAndDrop>().item = items[i];
