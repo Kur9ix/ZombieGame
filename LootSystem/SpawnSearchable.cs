@@ -17,13 +17,14 @@ public class SpawnSearchable : MonoBehaviour
     List<inventoryItem> lootItems = new List<inventoryItem>();
     public List<inventoryItem> lootItemsKitchen = new List<inventoryItem>();
     public List<inventoryItem> lootItemsGarage = new List<inventoryItem>();
-    GameObject prefab;
+    public GameObject prefab;
     public void SpawnSearchableObject(Vector3 pos, searchableType type)
     {
         if (type == searchableType.kitchen)
         {
             GameObject searchable = Instantiate(prefab);
             prefab.AddComponent<SearchableStorage>();
+            prefab.transform.position = pos;
             SearchableStorage storage = prefab.GetComponent<SearchableStorage>();
             int amount = Random.Range(1, 6);
             for (int i = 0; i < amount; i++)
@@ -42,5 +43,9 @@ public class SpawnSearchable : MonoBehaviour
                 storage.addToStorage(lootItemsGarage[Random.Range(1, lootItems.Count)]);
             }
         }
+    }
+
+    void Start(){
+        SpawnSearchableObject(new Vector3(10,5,0), searchableType.kitchen);
     }
 }

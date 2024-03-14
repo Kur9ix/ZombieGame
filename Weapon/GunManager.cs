@@ -65,7 +65,7 @@ public class GunManager : MonoBehaviour
 
     void shoot()
     {
-        print("Shoot");
+        Debug.Log("Shoot");
         Vector3 muzzelPos = new Vector3(transform.position.x + inventory.equippedSlot.MuzzelPos.x, transform.position.y + inventory.equippedSlot.MuzzelPos.y, transform.position.z);
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         
@@ -79,7 +79,7 @@ public class GunManager : MonoBehaviour
             audio.PlayOneShot(audio.clip);
             Muzzelflasch.Play();
             bullet.Play();
-        }
+        }else{ Debug.LogError("Audio or gun effects were not found"); } 
         if (hit && hit.transform.tag == "enemy")
         {
             Debug.Log("Hit object: " + hit.collider.gameObject.name);

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StorageUi : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class StorageUi : MonoBehaviour
         print("List Difference found");
         if (ItemObjects.Count < items.Count)
         {
-            addItemsToStorage(items.Count - ItemObjects.Count);
+            addItemsToStorage(items.Count - ItemObjects.Count, items);
         }
         else
         {
@@ -41,19 +42,26 @@ public class StorageUi : MonoBehaviour
         }
     }
 
-    void addItemsToStorage(int amount)
+    void addItemsToStorage(int amount, List<inventoryItem> items)
     {
-        print("adding UI elements to Storage");
-        GameObject item = Instantiate(itemPrefab);
-        for (int i = 0; i < slots.Count; i++)
-        {
-            if (!slots[i].GetComponent<Slot>().slotUsed)
+        for (int i = amount; i < items.Count; i++)
             {
-                item.GetComponent<RectTransform>().anchoredPosition = slots[i].GetComponent<RectTransform>().anchoredPosition;
-                item.GetComponent<DragAndDrop>().lastSlot = slots[i];
+                if (!slots[i].GetComponent<Slot>().slotUsed)
+                {
+                    var obj = Instantiate(itemPrefab);
+                    obj.transform.SetParent(gameObject.transform);
+                    obj.GetComponent<RectTransform>().anchoredPosition = slots[i].GetComponent<RectTransform>().anchoredPosition;
+                    if(obj.GetComponent<DragAndDrop>() == null){
+                        obj.AddComponent<DragAndDrop>();
+                    }
+                    obj.GetComponent<DragAndDrop>().item = items[i];
+                    obj.GetComponent<DragAndDrop>().lastSlot = slots[i];
+                    slots[i].GetComponent<Slot>().slotUsed = true;
+                    obj.GetComponent<RawImage>().texture = items[i].itemObject.texture;
+                    ItemObjects.Add(obj);
+                    break;
+                }
             }
-        }
-        ItemObjects.Add(item);
     }
 
     void removeItemsFromStorage(int amount)
@@ -61,8 +69,27 @@ public class StorageUi : MonoBehaviour
         print("removeimng UI elements to Storage");
         for (int i = ItemObjects.Count - amount; i < ItemObjects.Count; i++)
         {
+            ItemObjects[i].GetComponent<DragAndDrop>().lastSlot.GetComponent<Slot>().slotUsed = false;
+            Destroy(ItemObjects[i]);
             ItemObjects.RemoveAt(i);
         }
+    }
+
+    public void removeItemsFromStorage(inventoryItem item, GameObject itemObj)
+    {
+        List<inventoryItem> itemList = storageObject.GetComponent<StorageManager>().getStorageList();
+          
+        itemList.RemoveAt(itemList.FindIndex(inventoryItem => inventoryItem.itemID == item.itemID));
+        ItemObjects.RemoveAt(ItemObjects.FindIndex(GameObject => GameObject.GetComponent<DragAndDrop>().item.itemID == item.itemID));
+            
+        GameObject.Find("InventoryUi").GetComponent<InventoryUI>().addItem(itemObj);
+    }
+
+    void addItemsToStorage(inventoryItem item, GameObject itemObj)
+    {
+        ItemObjects.Add(itemObj);
+        storageObject.GetComponent<StorageManager>().addItem(item, item.amount);
+        GameObject.Find("InventoryUi").GetComponent<InventoryUI>().removeItem(itemObj);
     }
 
     void UpdateItemInfo(List<inventoryItem> items)
@@ -75,27 +102,16 @@ public class StorageUi : MonoBehaviour
 
     }
 
-    public void switchItemToStorage(inventoryItem item)
+    public void switchItemToStorage(inventoryItem item, GameObject itemObj)
     {
-        print("switchS");
-        GameObject.Find("InventoryManager").GetComponent<Inventory>().removeItem(item.itemID);
-        storageObject.GetComponent<StorageManager>().addItem(item, item.amount);
-        GameObject itemObj = Instantiate(itemPrefab);
-        itemObj.GetComponent<DragAndDrop>().item = item;
-        this.ItemObjects.Add(itemObj);
-        inventoryUI.ItemObjects.Find(GameObject => GameObject.GetComponent<DragAndDrop>().item == item).GetComponent<CanvasGroup>().blocksRaycasts = true;
-        inventoryUI.ItemObjects.RemoveAt(inventoryUI.ItemObjects.FindIndex(GameObject => GameObject.GetComponent<DragAndDrop>().item == item));
+        GameObject.Find("InventoryManager").GetComponent<Inventory>().removeItem(item, item.amount);
+        addItemsToStorage(item, itemObj);
+        
     }
-    public void switchItemToInventory(inventoryItem item)
+    public void switchItemToInventory(inventoryItem item, GameObject itemObj)
     {
-        print("switchI");
         GameObject.Find("InventoryManager").GetComponent<Inventory>().addItem(item, item.amount);
-        storageObject.GetComponent<StorageManager>().removeItem(item, item.amount);
-        GameObject itemObj = Instantiate(itemPrefab);
-        itemObj.GetComponent<DragAndDrop>().item = item;
-        inventoryUI.ItemObjects.Add(itemObj);
-        inventoryUI.ItemObjects.Find(GameObject => GameObject.GetComponent<DragAndDrop>().item == item).GetComponent<CanvasGroup>().blocksRaycasts = true;
-        ItemObjects.RemoveAt(ItemObjects.FindIndex(GameObject => GameObject.GetComponent<DragAndDrop>().item == item));
+        removeItemsFromStorage(item, itemObj);
     }
 
 }

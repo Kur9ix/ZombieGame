@@ -31,7 +31,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     {
         Debug.Log("Draging");
 
-        rectTransform.anchoredPosition += eventData.delta;
+        rectTransform.position = Input.mousePosition;
     }
     public void OnEndDrag(PointerEventData eventData)
     {
@@ -44,28 +44,62 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
 
         foreach (RaycastResult result in results)
         {
-            if((result.gameObject.CompareTag("slot") || result.gameObject.CompareTag("storageSlot")) && !result.gameObject.GetComponent<Slot>().slotUsed)
-{
-            
-                break;
-            }
-
+            print(result);
             if (result.gameObject.CompareTag("dropArea"))
             {
                 GameObject.Find("InventoryUi").GetComponent<InventoryUI>().removeItemFormUI(item.itemID);
                 GameObject.Find("InventoryManager").GetComponent<Inventory>().dropItem(item, 1);
                 Destroy(gameObject);
             }
-            if (result.gameObject.CompareTag("handEquipSlot") && !equipedItem)
+            if (result.gameObject.GetComponent<Slot>() && !result.gameObject.GetComponent<Slot>().slotUsed)
             {
-                GameObject.Find("InventoryManager").GetComponent<Inventory>().equipItem(item, item.itemID);
-                lastSlot = GameObject.Find("HandEquipSlot");
-                equipedItem = true;
-                break;
-            }
+                if (equipedItem && lastSlot != result.gameObject)
+                {
+                    equipedItem = false;
+                    GameObject.Find("InventoryManager").GetComponent<Inventory>().unEquipItem();
+                }
 
+                if (result.gameObject.CompareTag("handEquipSlot") && !result.gameObject.GetComponent<Slot>().slotUsed)
+                {
+                    GameObject.Find("InventoryManager").GetComponent<Inventory>().equipItem(item, item.itemID);
+                    equipedItem = true;
+                }
+
+                if (result.gameObject.CompareTag("slot") && lastSlot.CompareTag("storageSlot"))
+                {
+                    lastSlot.GetComponent<Slot>().slotUsed = false;
+                    GameObject.Find("StorageUi").GetComponent<StorageUi>().switchItemToInventory(item, gameObject);
+                    lastSlot = result.gameObject;
+                    result.gameObject.GetComponent<Slot>().slotUsed = true;
+                }
+
+                if (result.gameObject.CompareTag("storageSlot") && lastSlot.CompareTag("slot"))
+                {
+
+                    lastSlot.GetComponent<Slot>().slotUsed = false;
+                    GameObject.Find("StorageUi").GetComponent<StorageUi>().switchItemToStorage(item, gameObject);
+                    lastSlot = result.gameObject;
+                    result.gameObject.GetComponent<Slot>().slotUsed = true;
+
+                }
+
+                if (result.gameObject.CompareTag("slot") && lastSlot.CompareTag("searchabelSlot"))
+                {
+                    GameObject.Find("InventoryManager").GetComponent<Inventory>().addItem(item, item.amount);
+                    GameObject.Find("SearchabelSlotSpace").GetComponent<SearchableUi>().removeItemsFromStorage(item);
+                    lastSlot = result.gameObject;
+                    GameObject.Find("InventoryUi").GetComponent<InventoryUI>().checkForItemChange();
+                    Destroy(gameObject);
+                }
+                if (lastSlot != result.gameObject)
+                {
+                    lastSlot.gameObject.GetComponent<Slot>().slotUsed = false;
+                    lastSlot = result.gameObject;
+                    result.gameObject.GetComponent<Slot>().slotUsed = true;
+                }
+            }
         }
-    
+
         gameObject.transform.SetParent(lastSlot.transform.parent);
         rectTransform.anchoredPosition = lastSlot.GetComponent<RectTransform>().anchoredPosition;
     }
@@ -92,7 +126,8 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         }
     }
 
-    public void switchItem(){
+    public void switchItem()
+    {
 
     }
 

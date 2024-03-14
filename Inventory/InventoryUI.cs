@@ -63,6 +63,14 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    public void addItem(GameObject itemObj){
+        ItemObjects.Add(itemObj);
+    }
+
+    public void removeItem(GameObject itemObj){
+        ItemObjects.RemoveAt(ItemObjects.FindIndex(GameObject => GameObject.GetComponent<DragAndDrop>().item.itemID == itemObj.GetComponent<DragAndDrop>().item.itemID));
+    }
+
     public void removeItemFormUI(int id)
     {
         for (int i = 0; i < items.Length; i++)

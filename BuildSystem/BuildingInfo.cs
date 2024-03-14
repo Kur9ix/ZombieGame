@@ -18,7 +18,7 @@ public class BuildingInfo{
    public buildingTyp buildingTyp;
    public List<buildingResources> buildingResources = new List<buildingResources>();
    public float maxHealth;
-
    public TileBase groundTileBase;
    public Sprite palceableObjects;
+   public AudioClip buildSound;
 }

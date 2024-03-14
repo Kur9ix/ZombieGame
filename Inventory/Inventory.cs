@@ -7,7 +7,7 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     [SerializeField]
-    private static int itemCounter = 1000;
+    public static int itemCounter = 1000;
 
     [SerializeField]
     private GameObject Player;

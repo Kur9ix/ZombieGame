@@ -25,6 +25,9 @@ public class Interact : MonoBehaviour
                 interactUI.SetActive(true);
                 if(Input.GetKeyDown(KeyCode.E) && hit2D.transform.GetComponent<StorageManager>() != null){
                     GameObject.Find("UiManager").GetComponent<UiManager>().openStorageUI(hit2D.transform.gameObject);
+                } 
+                if(Input.GetKeyDown(KeyCode.E) && hit2D.transform.GetComponent<SearchableStorage>() != null){
+                    GameObject.Find("UiManager").GetComponent<UiManager>().openSearchableUi(hit2D.transform.gameObject);
                 }
             }else{
                 interactUI.SetActive(false);
