@@ -46,6 +46,6 @@ public class SpawnSearchable : MonoBehaviour
     }
 
     void Start(){
-        SpawnSearchableObject(new Vector3(10,5,0), searchableType.kitchen);
+    
     }
 }

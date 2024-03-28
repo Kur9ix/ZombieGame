@@ -43,9 +43,12 @@ public class GunManager : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Mouse0) && !uiManager.UiActive)
             {
-                if (Time.time > timeToShoot && inventory.equippedSlot.currentMag > 0)
+                if (Time.time > timeToShoot && inventory.equippedSlot.currentMag > 0 && inventory.equippedSlot.itemType == ItemType.Weapon)
                 {
                     StartCoroutine(FireDelay());
+                }else if(inventory.equippedSlot.itemType == ItemType.mealeWeapon)
+                {
+                    StartCoroutine(mealeDelay());
                 }
             }
             if (Input.GetKey(KeyCode.R))
@@ -62,6 +65,15 @@ public class GunManager : MonoBehaviour
         timeToShoot = Time.time + inventory.equippedSlot.timetoFire;
         yield return new WaitForSeconds(inventory.equippedSlot.timetoFire);
     }
+
+    IEnumerator mealeDelay()
+    {
+        mealeAtack();
+        timeToShoot = Time.time + inventory.equippedSlot.timetoFire;
+        yield return new WaitForSeconds(inventory.equippedSlot.timetoFire);
+    }
+
+
 
     void shoot()
     {
@@ -86,6 +98,10 @@ public class GunManager : MonoBehaviour
             hit.transform.GetComponent<EnemyHealth>().updateHealth(inventory.equippedSlot.damage);
         }
         inventory.equippedSlot.currentMag -= 1;
+    }
+
+    void mealeAtack(){
+
     }
 
 

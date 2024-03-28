@@ -3,6 +3,7 @@ using UnityEngine;
 public enum ItemType
 {
     Weapon,
+    mealeWeapon,
     Useable,
     Ammo,
     Tool

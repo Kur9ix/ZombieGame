@@ -47,6 +47,7 @@ public class WorldGenerationManager : MonoBehaviour
             for (int y = yCord - 1; y <= yCord + 1; y++)
             {
                 GenerateChunk(x, y);
+                VegetationGenerator.checkChunk(xCord,yCord);
             }
         }
     }
@@ -64,7 +65,7 @@ public class WorldGenerationManager : MonoBehaviour
         }
         loadedChunks.Remove(new Vector2Int(xCord, yCord));
 
-        //VegetationGenerator.unLoadChunkVegetation();
+        VegetationGenerator.unLoadChunkVegetation(xCord, yCord);
     }
 
     void GenerateChunk(int xCord, int yCord)
@@ -90,7 +91,7 @@ public class WorldGenerationManager : MonoBehaviour
             }
             loadedChunks.Add(new Vector2Int(xCord, yCord), true);
         }
-        VegetationGenerator.loadChunkVegetation(xCord, yCord);
+        VegetationGenerator.checkChunk(xCord, yCord);
     }
 
     void CheckIfChunkNeedsToBeLoaded(int xCord, int yCord)
@@ -133,6 +134,10 @@ public class WorldGenerationManager : MonoBehaviour
 
         unloadedChunks.Clear();
 
+    }
+
+    public int getChunkSize(){
+        return chunkSize;
     }
 
 }
